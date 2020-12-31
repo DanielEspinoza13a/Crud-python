@@ -3,25 +3,25 @@ from bson.objectid import ObjectId # Para crear ObjectId, porque _id como cadena
 from datetime import date
 
 def obtener_bd():
-    host = "localhost"
-    puerto = "27017"
+    # host = "localhost"
+    # puerto = "27017"
     base_de_datos = "test"
-    cliente = MongoClient("mongodb://{}:{}@{}:{}".format(host, puerto))
+    cliente = MongoClient("mongodb://127.0.0.1:27017/")
     return cliente[base_de_datos]
 
-def insertar(user):
+def insertar(x, y, z):
     base_de_datos = obtener_bd()
     persona = base_de_datos.persona
     return persona.insert_one({
-        "_id": user._id,
-        "nombre": user.nombre,
-        "cantidad": user.cantidad,
+        "_id": x,
+        "nombre": y,
+        "cantidad": z,
         }).inserted_id
 
 def obtener():
     base_de_datos = obtener_bd()
-    return base_de_datos.persona.find()
-
+    persona =  list(base_de_datos.persona.find())
+    return persona
 def actualizar(id, user):
     base_de_datos = obtener_bd()
     resultado = base_de_datos.persona.update_one(
@@ -61,15 +61,14 @@ while eleccion is not 5:
         _id = str(input("id: "))
         nombre = str(input("Nombre: "))
         fecha_nacimiento = str(input("Fecha_de_nacimiento: "))
-        usuario = user(_id, nombre, fecha_nacimiento)
-        perso = insertar(user)
+        perso = insertar(_id,nombre,fecha_nacimiento)
     elif eleccion is 2:
         print("Obteniendo users")
         for personas in obtener():
             print("=================")
             print("Id: ", personas["_id"])
             print("Nombre: ", personas["nombre"])
-            print("fecha_nacimiento: ", personas["fecha_nacimiento"])
+            print("fecha_nacimiento: ", personas["cantidad"])
     elif eleccion is 3:
         print("Actualizar")
         id = input("Dime el id: ")
